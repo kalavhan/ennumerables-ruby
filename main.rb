@@ -27,13 +27,15 @@ module Enumerable
 
   def my_all?
     array = self
-    if !block_given?
-      return true
-    end
-    if array.length == 0
-      return true
-    end
+    return true if !block_given?
     array.my_each{|x| return false if !yield(x)}
     return true
+  end
+
+  def my_any?
+    array = self
+    return true if (!(block_given?) && !(array.include? nil))
+    array.my_each{|x| return true if yield(x)}
+    return false
   end
 end
