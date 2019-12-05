@@ -38,4 +38,14 @@ module Enumerable
     array.my_each{|x| return true if yield(x)}
     return false
   end
+
+  def my_none?
+    array = self
+    return false if !block_given?
+    array.my_each{|x| return false if yield(x)}
+    return true
+  end
 end
+array = [5, 7, 6]
+puts array.none? {|x| x>9}
+puts array.my_none? {|x| x>9}
