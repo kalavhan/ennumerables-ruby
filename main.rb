@@ -96,7 +96,22 @@ module Enumerable
     return to_enum
   end
 
-  def my_inject
-
+  def my_inject(sym = nil)
+    sum = 0;
+    if block_given?
+      if self.is_a? Array
+        sum = 0 if self.my_all? {|i| i.is_a?(Integer)}
+        sum = "" if self.my_all? {|i| i.is_a?(String)}
+        self.my_each{|x| sum = yield(sum, x)}
+        return sum   
+      else
+        sum = sym if sym != nil
+        sum = 0 if sym == nil
+        for i in (self)
+          sum = yield(sum, i)
+        end
+        return sum
+      end
+    end
   end
 end
