@@ -80,12 +80,23 @@ module Enumerable
     return count
   end
 
-  def my_map
-    return to_enum if !block_given?
+  def my_map(n_proc = nil)
     new_array = []
-    for i in (self)
-      new_array.push(yield(i))
+    if n_proc != nil
+      for i in (self)
+        new_array.push(n_proc.call(i))
+      end
+      return new_array
+    elsif block_given?
+      for i in (self)
+        new_array.push(yield(i))
+      end
+      return new_array
     end
-    return new_array
+    return to_enum
+  end
+
+  def my_inject
+
   end
 end
