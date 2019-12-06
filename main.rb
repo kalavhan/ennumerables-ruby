@@ -67,6 +67,16 @@ module Enumerable
     return true
   end
 
-  def my_count
+  def my_count (pattern = nil)
+    array = self
+    count = 0
+    if block_given?
+      array.my_each{|x| count += 1 if yield(x)}
+    elsif pattern != nil
+      array.my_each{|x| count += 1 if pattern == x}
+    else
+      array.my_each{|x| count += 1}
+    end
+    return count
   end
 end
