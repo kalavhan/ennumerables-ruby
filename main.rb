@@ -25,27 +25,48 @@ module Enumerable
     return new_array
   end
 
-  def my_all?
+  def my_all?(pattern = nil)
     array = self
-    return true if !block_given?
-    array.my_each{|x| return false if !yield(x)}
+    if block_given?
+      array.my_each{|x| return false if !yield(x)}
+    elsif pattern.class == Class
+      array.my_each{|x| return false if !(x.is_a? pattern)}
+    elsif pattern.class == Regexp
+      array.my_each{|x| return false if pattern.match? x}
+    else
+      array.my_each{|x| return false if x == pattern}
+    end
     return true
   end
 
-  def my_any?
+  def my_any?(pattern = nil)
     array = self
-    return true if (!(block_given?) && !(array.include? nil))
-    array.my_each{|x| return true if yield(x)}
+    if block_given?
+      array.my_each{|x| return false if yield(x)}
+    elsif pattern.class == Class
+      array.my_each{|x| return true if (x.is_a? pattern)}
+    elsif pattern.class == Regexp
+      array.my_each{|x| return false if !(pattern.match? x)}
+    else
+      array.my_each{|x| return true if x == pattern}
+    end
     return false
   end
 
-  def my_none?
+  def my_none?(pattern = nil)
     array = self
-    return false if !block_given?
-    array.my_each{|x| return false if yield(x)}
+    if block_given?
+      array.my_each{|x| return false if yield(x)}
+    elsif pattern.class == Class
+      array.my_each{|x| return false if (x.is_a? pattern)}
+    elsif pattern.class == Regexp
+      array.my_each{|x| return false if (pattern.match? x)}
+    else
+      array.my_each{|x| return false if x}
+    end
     return true
   end
+
+  def my_count
+  end
 end
-array = [5, 7, 6]
-puts array.none? {|x| x>9}
-puts array.my_none? {|x| x>9}
