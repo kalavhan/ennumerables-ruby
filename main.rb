@@ -1,126 +1,123 @@
 # frozen_string_literal: true
 
-module Enumerable
+module Enumerable # rubocop:disable Metrics/ModuleLength
   def my_each
     return unless block_given?
-    array = self
-    for i in 0...(array.length)
+
+    array = is_a?(Range) ? to_a : self
+    i = 0
+    while i < array.length
       yield(array[i])
+      i += 1
     end
   end
-  
+
   def my_each_with_index
     return unless block_given?
-    array = self
-    for i in 0...(array.length)
+
+    array = is_a?(Range) ? to_a : self
+    i = 0
+    while i < array.length
       yield(array[i], i)
+      i += 1
     end
   end
 
   def my_select
     return unless block_given?
-    array = self
+
     new_array = []
-    array.my_each{|x| new_array.push(x) if yield(x)}
-    return new_array
+    my_each { |x| new_array.push(x) if yield(x) }
+    new_array
   end
 
-  def my_all?(pattern = nil)
-    array = self
+  def my_all?(pattern = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     if block_given?
-      array.my_each{|x| return false if !yield(x)}
+      my_each { |x| return false unless yield(x) }
     elsif pattern.class == Class
-      array.my_each{|x| return false if !(x.is_a? pattern)}
+      my_each { |x| return false unless x.is_a? pattern }
     elsif pattern.class == Regexp
-      array.my_each{|x| return false if pattern.match? x}
+      my_each { |x| return false if pattern.match? x }
     else
-      array.my_each{|x| return false if x == pattern}
+      my_each { |x| return false if x == pattern }
     end
-    return true
+    true
   end
 
-  def my_any?(pattern = nil)
-    array = self
+  def my_any?(pattern = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     if block_given?
-      array.my_each{|x| return false if yield(x)}
+      my_each { |x| return true if yield(x) }
     elsif pattern.class == Class
-      array.my_each{|x| return true if (x.is_a? pattern)}
+      my_each { |x| return true if x.is_a? pattern }
     elsif pattern.class == Regexp
-      array.my_each{|x| return false if !(pattern.match? x)}
+      my_each { |x| return false unless pattern.match? x }
     else
-      array.my_each{|x| return true if x == pattern}
+      my_each { |x| return true if x == pattern }
     end
-    return false
+    false
   end
 
-  def my_none?(pattern = nil)
-    array = self
+  def my_none?(pattern = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     if block_given?
-      array.my_each{|x| return false if yield(x)}
+      my_each { |x| return false if yield(x) }
     elsif pattern.class == Class
-      array.my_each{|x| return false if (x.is_a? pattern)}
+      my_each { |x| return false if x.is_a? pattern }
     elsif pattern.class == Regexp
-      array.my_each{|x| return false if (pattern.match? x)}
+      my_each { |x| return false if pattern.match? x }
     else
-      array.my_each{|x| return false if x}
+      my_each { |x| return false if x }
     end
-    return true
+    true
   end
 
-  def my_count (pattern = nil)
-    array = self
+  def my_count(pattern = nil)
     count = 0
     if block_given?
-      array.my_each{|x| count += 1 if yield(x)}
-    elsif pattern != nil
-      array.my_each{|x| count += 1 if pattern == x}
+      my_each { |x| count += 1 if yield(x) }
+    elsif !pattern.nil?
+      my_each { |x| count += 1 if pattern == x }
     else
-      array.my_each{|x| count += 1}
+      my_each { count += 1 }
     end
-    return count
+    count
   end
 
   def my_map(n_proc = nil)
     new_array = []
-    if n_proc != nil
-      for i in (self)
-        new_array.push(n_proc.call(i))
-      end
+    if !n_proc.nil?
+      my_each { |x| new_array.push(n_proc.call(x)) }
       return new_array
     elsif block_given?
-      for i in (self)
-        new_array.push(yield(i))
-      end
+      my_each { |x| new_array.push(yield(x)) }
       return new_array
     end
-    return to_enum
+    to_enum
   end
 
-  def my_inject(sym = nil)
-    sum = 0;
+  def my_inject(initi = nil, sym = nil)
+    array = to_a
     if block_given?
-      if self.is_a? Array
-        if self.my_all? {|i| i.is_a?(Integer)}
-         sum = sym if sym != nil
-        elsif self.my_all? {|i| i.is_a?(String)}
-          sum = ""
-          sum = sym if sym != nil
-        end
-        self.my_each{|x| sum = yield(sum, x)}
-        return sum   
+      if initi.nil?
+        res = array[0]
+        array.shift
       else
-        sum = sym if sym != nil
-        sum = 0 if sym == nil
-        for i in (self)
-          sum = yield(sum, i)
-        end
-        return sum
+        res = initi
       end
+      array.my_each { |x| res = yield(res, x) }
+      res
+    elsif initi.class == Symbol
+      res = array[0]
+      array.shift
+      array.my_each { |x| res = res.send(initi, x) }
+      res
+    elsif sym.class == Symbol
+      res = initi
+      array.my_each { |x| res = res.send(sym, x) }
+      res
     end
   end
+end
 
-  def multiply_els(array)
-    return array.my_inject(1) { |sum, n| sum * n } 
-  end
-
+def multiply_els(array)
+  array.my_inject { |sum, n| sum * n }
 end
