@@ -79,4 +79,13 @@ module Enumerable
     end
     return count
   end
+
+  def my_map
+    return to_enum if !block_given?
+    new_array = []
+    for i in (self)
+      new_array.push(yield(i))
+    end
+    return new_array
+  end
 end
