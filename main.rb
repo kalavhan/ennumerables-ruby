@@ -100,8 +100,12 @@ module Enumerable
     sum = 0;
     if block_given?
       if self.is_a? Array
-        sum = 0 if self.my_all? {|i| i.is_a?(Integer)}
-        sum = "" if self.my_all? {|i| i.is_a?(String)}
+        if self.my_all? {|i| i.is_a?(Integer)}
+         sum = sym if sym != nil
+        elsif self.my_all? {|i| i.is_a?(String)}
+          sum = ""
+          sum = sym if sym != nil
+        end
         self.my_each{|x| sum = yield(sum, x)}
         return sum   
       else
@@ -114,4 +118,9 @@ module Enumerable
       end
     end
   end
+
+  def multiply_els(array)
+    return array.my_inject(1) { |sum, n| sum * n } 
+  end
+
 end
