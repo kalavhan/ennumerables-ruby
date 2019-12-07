@@ -2,7 +2,7 @@
 
 module Enumerable # rubocop:disable Metrics/ModuleLength
   def my_each
-    return unless block_given?
+    return to_enum unless block_given?
 
     array = is_a?(Range) ? to_a : self
     i = 0
@@ -13,7 +13,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   def my_each_with_index
-    return unless block_given?
+    return to_enum unless block_given?
 
     array = is_a?(Range) ? to_a : self
     i = 0
@@ -24,7 +24,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   def my_select
-    return unless block_given?
+    return to_enum unless block_given?
 
     new_array = []
     my_each { |x| new_array.push(x) if yield(x) }
@@ -50,7 +50,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     elsif pattern.class == Class
       my_each { |x| return true if x.is_a? pattern }
     elsif pattern.class == Regexp
-      my_each { |x| return false unless pattern.match? x }
+      my_each { |x| return true if x.match? pattern }
     else
       my_each { |x| return true if x == pattern }
     end
@@ -63,7 +63,9 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     elsif pattern.class == Class
       my_each { |x| return false if x.is_a? pattern }
     elsif pattern.class == Regexp
-      my_each { |x| return false if pattern.match? x }
+      my_each { |x| return false if x.match? pattern }
+    elsif !pattern.nil?
+      my_each { |x| return false if x == pattern}
     else
       my_each { |x| return false if x }
     end
@@ -116,8 +118,4 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
       res
     end
   end
-end
-
-def multiply_els(array)
-  array.my_inject { |sum, n| sum * n }
 end
