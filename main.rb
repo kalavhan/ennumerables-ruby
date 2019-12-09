@@ -101,24 +101,22 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   def my_inject(initi = nil, sym = nil)
-    array = to_a
+    array_n = to_a
     if block_given?
+      res = initi
       if initi.nil?
-        res = array[0]
-        array.shift
-      else
-        res = initi
+        res = array_n[0]
+        array_n = array_n[1..-1]
       end
-      array.my_each { |x| res = yield(res, x) }
+      array_n.my_each { |x| res = yield(res, x) }
       res
     elsif initi.class == Symbol
-      res = array[0]
-      array.shift
-      array.my_each { |x| res = res.send(initi, x) }
+      res = array_n[0]
+      array_n[1..-1].my_each { |x| res = res.send(initi, x) }
       res
     elsif sym.class == Symbol
       res = initi
-      array.my_each { |x| res = res.send(sym, x) }
+      array_n.my_each { |x| res = res.send(sym, x) }
       res
     end
   end
