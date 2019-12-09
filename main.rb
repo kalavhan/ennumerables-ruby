@@ -37,9 +37,11 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     elsif pattern.class == Class
       my_each { |x| return false unless x.is_a? pattern }
     elsif pattern.class == Regexp
-      my_each { |x| return false if pattern.match? x }
+      my_each { |x| return false unless x.match? pattern }
+    elsif !pattern.nil?
+      my_each { |x| return false unless x == pattern }
     else
-      my_each { |x| return false if x == pattern }
+      my_each { |x| return false unless x }
     end
     true
   end
@@ -51,8 +53,10 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
       my_each { |x| return true if x.is_a? pattern }
     elsif pattern.class == Regexp
       my_each { |x| return true if x.match? pattern }
-    else
+    elsif !pattern.nil?
       my_each { |x| return true if x == pattern }
+    else
+      my_each { |x| return true if x }
     end
     false
   end
