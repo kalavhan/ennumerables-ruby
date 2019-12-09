@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Enumerable # rubocop:disable Metrics/ModuleLength
+module Enumerable
   def my_each
     return to_enum unless block_given?
 
@@ -31,7 +31,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     new_array
   end
 
-  def my_all?(pattern = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def my_all?(pattern = nil)
     if block_given?
       my_each { |x| return false unless yield(x) }
     elsif pattern.class == Class
@@ -46,7 +46,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     true
   end
 
-  def my_any?(pattern = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def my_any?(pattern = nil)
     if block_given?
       my_each { |x| return true if yield(x) }
     elsif pattern.class == Class
@@ -61,7 +61,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     false
   end
 
-  def my_none?(pattern = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def my_none?(pattern = nil)
     if block_given?
       my_each { |x| return false if yield(x) }
     elsif pattern.class == Class
@@ -120,4 +120,8 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
       res
     end
   end
+end
+
+def multiply_els(array)
+  array.my_inject { |sum, n| sum * n }
 end
