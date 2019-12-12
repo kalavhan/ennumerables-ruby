@@ -205,7 +205,7 @@ describe Enumerable do
   end
 
   describe '#multiply_els' do
-    it 'Returns the result of multiplying all the elements of the array together' do
+    it 'Returns the result of multiplying all the elements of the array together ' do
       expect(Enumerable.multiply_els([2, 4, 5])).to eql(40)
     end
   end
