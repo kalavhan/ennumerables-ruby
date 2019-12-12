@@ -203,4 +203,10 @@ describe Enumerable do
       expect((5..10).my_inject(2) { |product, n| product * n }).to eql(302400)
     end
   end
+
+  describe '#multiply_els' do
+    it 'Returns the result of multiplying all the elements of the array together' do
+      expect(Enumerable.multiply_els([2, 4, 5])).to eql(40)
+    end
+  end
 end
