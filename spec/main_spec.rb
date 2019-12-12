@@ -194,7 +194,7 @@ describe Enumerable do
       expect((5..10).my_inject(:+)).to eql(45)
     end
     it 'returns the result of the operation specified in a block' do
-      expect((5..10).my_inject { |sum, n| sum + n } ).to eql(45)
+      expect((5..10).my_inject { |sum, n| sum + n }).to eql(45)
     end
     it 'returns the result of the operation specified in the argument taking the first parameter as the accumulator' do
       expect((5..10).my_inject(2, :*)).to eql(302_400)
