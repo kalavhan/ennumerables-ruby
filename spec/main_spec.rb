@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './main'
 
 describe Enumerable do
@@ -17,11 +19,11 @@ describe Enumerable do
     it 'returns the item and index of an array, it is placed i a hash to see if the value and index are okay' do
       hash = {}
       %w[cat dog wombat].my_each_with_index { |item, index| hash[item] = index }
-      expect(hash).to eql({"cat"=>0, "dog"=>1, "wombat"=>2})
+      expect(hash).to eql('cat' => 0, 'dog' => 1, 'wombat' => 2)
     end
 
     it 'returns an enumerator if no block is given' do
-      result =%w[cat dog wombat].my_each_with_index
+      result = %w[cat dog wombat].my_each_with_index
       expect(result).to be_an Enumerator
     end
   end
@@ -128,12 +130,49 @@ describe Enumerable do
   end
 
   describe '#my_none?' do
-    it '' do
+    it 'should return true if a block is given and no element meets the specified condition' do
+      expect(%w[ant bear cat].my_none? { |word| word.length == 5 }).to eql(true)
+    end
+
+    it 'should return false if a block is given and an element meets the specified condition' do
+      expect(%w[ant bear cat].my_none? { |word| word.length >= 4 }).to eql(false)
+    end
+
+    it 'should return true if no element belongs to a specified class' do
+      expect([1, 3, 42].my_none?(Float)).to eql(true)
+    end
+
+    it 'should return false if an element belongs to a specified class' do
+      expect([1, 3.14, 42].my_none?(Float)).to eql(false)
+    end
+
+    it 'should return true if no element matches a regular expression' do
+      expect(%w[ant bear cat].my_none?(/f/)).to eql(true)
+    end
+
+    it 'should return false if an element matches a regular expression' do
+      expect(%w[ant bear cat].my_none?(/t/)).to eql(false)
+    end
+
+    it 'should return true if no  block is given and no element of the array resolves to truthy' do
+      expect([].my_none?).to eql(true)
+    end
+
+    it 'should return false if no block is given but an element resolves to truthy' do
+      expect([nil, false, true].my_none?).to eql(false)
     end
   end
 
   describe '#my_count' do
-    it '' do
+    ary = [1, 2, 4, 2]
+    it 'should return the number of elements in the array equal to the argument passed' do
+      expect(ary.my_count(2)).to eql(2)
+    end
+    it 'should return the number of elements that resolve to true if a block is given' do
+      expect(ary.my_count { |x| x.even? }).to eql(3)
+    end
+    it 'should return a count of all the elements in the array if neither a block nor an argument is given' do
+      expect(ary.my_count).to eql(4)
     end
   end
 
