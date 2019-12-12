@@ -185,7 +185,7 @@ describe Enumerable do
       expect((1..4).my_map(my_proc)).to eql([1, 4, 9, 16])
     end
     it 'returns an enumerator if no block or proc is given' do
-      expect((1..4).my_map).to be_an Enumerator 
+      expect((1..4).my_map).to be_an Enumerator
     end
   end
 
@@ -197,10 +197,10 @@ describe Enumerable do
       expect((5..10).my_inject { |sum, n| sum + n } ).to eql(45)
     end
     it 'returns the result of the operation specified in the argument taking the first parameter as the accumulator' do
-      expect((5..10).my_inject(2, :*)).to eql(302400)
+      expect((5..10).my_inject(2, :*)).to eql(302_400)
     end
     it 'returns the result of the operation specified in the block taking the parameter as the accumulator' do
-      expect((5..10).my_inject(2) { |product, n| product * n }).to eql(302400)
+      expect((5..10).my_inject(2) { |product, n| product * n }).to eql(302_400)
     end
   end
 
