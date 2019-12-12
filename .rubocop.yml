@@ -33,7 +33,7 @@ Style/ClassAndModuleChildren:
 Style/SymbolProc:
   Enabled: false
 
-Layout/HashAlignment:
+Layout/AlignHash:
   EnforcedColonStyle: key
 Layout/ExtraSpacing:
   AllowForAlignment: false
