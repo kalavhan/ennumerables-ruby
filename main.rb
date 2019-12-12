@@ -124,4 +124,3 @@ end
 def multiply_els(array)
   array.my_inject { |sum, n| sum * n }
 end
-print %i[foo bar].select
