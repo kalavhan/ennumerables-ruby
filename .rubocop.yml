@@ -30,6 +30,8 @@ Style/Documentation:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
+Style/SymbolProc:
+  Enabled: false
 
 Layout/HashAlignment:
   EnforcedColonStyle: key
