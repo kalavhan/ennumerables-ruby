@@ -120,8 +120,8 @@ module Enumerable
       res
     end
   end
-end
 
-def multiply_els(array)
-  array.my_inject { |sum, n| sum * n }
+  def self.multiply_els(array)
+    array.my_inject { |sum, n| sum * n }
+  end
 end

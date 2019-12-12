@@ -30,8 +30,10 @@ Style/Documentation:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
+Style/SymbolProc:
+  Enabled: false
 
-Layout/HashAlignment:
+Layout/AlignHash:
   EnforcedColonStyle: key
 Layout/ExtraSpacing:
   AllowForAlignment: false
